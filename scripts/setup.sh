@@ -44,20 +44,20 @@ if [[ $conferma =~ ^[Yy]$ ]]; then
   # Renaming file and folders
   rename_occurrences "$rootfolder"
 
+  # Deleting template .git folder
+  if [ -d "$rootfolder/.git" ]; then
+    rm -rf "$rootfolder/.git"
+    echo ".git folder removed"
+  fi
+
   # Renaming rootfolder
   parent_dir=$(dirname "$rootfolder")
   new_rootfolder="$parent_dir/$parametro"
-
   if [ "$rootfolder" != "$new_rootfolder" ]; then
     mv "$rootfolder" "$new_rootfolder"
     echo "Root folder renamed to '$new_rootfolder'"
   fi
 
-   # Deleting template .git folder
-  if [ -d "$rootfolder/.git" ]; then
-    rm -rf "$rootfolder/.git"
-    echo ".git folder removed"
-  fi
   echo "Replacing finished!"
 else
   echo "Replacing canceled."
