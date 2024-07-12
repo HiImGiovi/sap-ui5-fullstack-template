@@ -7,7 +7,7 @@ script_dir=$(dirname "$script_path")
 # Get project root folder
 rootfolder=$(dirname "$script_dir")
 
-current_project_name=prova
+current_project_name=templateproject
 
 if [ -z "$1" ];
     then
