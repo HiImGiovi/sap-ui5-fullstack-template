@@ -1,0 +1,36 @@
+{
+  "name": "templateproject",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^7",
+    "express": "^4",
+    "@sap/xssec": "^3",
+    "@sap/cds-hana": "^2"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7",
+    "@sap/eslint-plugin-cds": "^3",
+    "eslint": "^9"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "create-bindings": "cds bind -2 templateproject-db & cds bind -2 templateproject-auth",
+    "watch": "cds w --profile hybrid",
+    "start-flp": "cds bind --exec -- npm start --prefix app/router",
+    "start-fs": "npm run watch & npm run start-flp"
+  },
+  "cds": {
+    "requires": {
+      "[development]": {
+        "auth": "dummy"
+      },
+      "auth": "xsuaa",
+      "db": "hana"
+    }
+  }
+}

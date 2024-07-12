@@ -1,0 +1,142 @@
+_schema-version: "3.1"
+ID: templateproject
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: templateproject-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: templateproject-auth
+  - name: templateproject-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+    ignore: ["node_modules/"]
+- name: templateproject
+  type: approuter.nodejs
+  path: app/router
+  parameters:
+    keep-existing-routes: true
+    disk-quota: 256M
+    memory: 256M
+  requires:
+    - name: srv-api
+      group: destinations
+      properties:
+        name: srv-api # must be used in xs-app.json as well
+        url: ~{srv-url}
+        forwardAuthToken: true
+    - name: templateproject-auth
+- name: templateproject-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: templateproject-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: templateproject-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: templateproject-destination-service
+    parameters:
+      content-target: true
+  - name: templateproject_html_repo_host
+    parameters:
+      service-key:
+        name: templateproject_html_repo_host-key
+  - name: templateproject-auth
+    parameters:
+      service-key:
+        name: templateproject-auth-key
+  - name: srv-api
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: templateproject-api
+          Authentication: OAuth2UserTokenExchange
+          HTML5.DynamicDestination: true
+          ServiceInstanceName: templateproject-auth
+          ServiceKeyName: templateproject-auth-key
+          URL: ~{srv-api/srv-url}
+          WebIDEEnabled: true
+          WebIDEUsage: odata_gen
+        - Name: templateprojectsolution_templateproject_html_repo_host
+          ServiceInstanceName: templateproject-html5-app-host-service
+          ServiceKeyName: templateproject_html_repo_host-key
+          sap.cloud.service: templateprojectsolution
+        - Authentication: OAuth2UserTokenExchange
+          Name: templateprojectsolution_templateproject_auth
+          ServiceInstanceName: templateproject-auth
+          ServiceKeyName: templateproject-auth-key
+          sap.cloud.service: templateprojectsolution
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
+- name: templateproject-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: templateproject_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - templateprojectui.zip
+      name: templateprojectui
+      target-path: resources/
+- name: templateprojectui
+  type: html5
+  path: app/templateprojectui
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: templateproject-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: templateproject-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: templateproject-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      version: 1.0.0
+    service: destination
+    service-name: templateproject-destination-service
+    service-plan: lite
+- name: templateproject_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: templateproject-html5-app-host-service
+    service-plan: app-host
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production
