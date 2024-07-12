@@ -35,5 +35,7 @@ mta_archives/
 #sensitive data
 scripts/login.sh
 
+
 #build artifacts
 resources/
+*dist/

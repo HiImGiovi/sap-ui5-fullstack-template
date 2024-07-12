@@ -1,9 +1,0 @@
-<mvc:View
-    controllerName=""
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
->
-    <Page>
-        <Text text="ciao" />
-    </Page>
-</mvc:View>
