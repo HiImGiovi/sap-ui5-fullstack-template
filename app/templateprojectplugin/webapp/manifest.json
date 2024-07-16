@@ -1,0 +1,63 @@
+{
+    "_version": "1.49.0",
+    "sap.app": {
+        "id": "templateproject.templateprojectplugin",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "type": "component",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "i18n": "i18n/i18n.properties",
+        "crossNavigation": {
+            "inbounds": {
+                "intent1": {
+                    "semanticObject": "templateprojectplugin",
+                    "action": "display",
+                    "title": "{{appTitle}}",
+                    "info": "{{appInfo}}",
+                    "subTitle": "{{appSubTitle}}",
+                    "icon": "sap-icon://course-book"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "fullWidth": false,
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "dependencies": {
+            "minUI5Version": "1.115.1",
+            "libs": {
+                "sap.fe.templates": {}
+            }
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    },
+    "sap.flp": {
+        "type": "plugin"
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "templateprojectsolution"
+    }
+}

@@ -1,0 +1,22 @@
+<ResponsivePopover
+    xmlns:core="sap.ui.core"
+    core:require="{
+        common:  'templateprojectplugin/utils/common'
+    }"
+    xmlns="sap.m"
+    placement="Auto"
+    title="templateprojectplugin"
+    modal="false"
+    class="sapUiResponsivePadding--header sapUiResponsivePadding--footer"
+    resizable="true"
+>
+    <customHeader>
+        <Toolbar>
+            <Title text="{i18n>appTitle}" />
+            <ToolbarSpacer />
+            <Button text="{i18n>close}" />
+        </Toolbar>
+    </customHeader>
+    <endButton />
+    <content />
+</ResponsivePopover>

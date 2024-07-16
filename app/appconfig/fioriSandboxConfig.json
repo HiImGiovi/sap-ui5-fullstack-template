@@ -53,5 +53,11 @@
         }
       }
     }
+  },
+  "bootstrapPlugins": {
+    "templateprojectplugin": {
+      "component": "templateprojectplugin",
+      "url": "templateprojectplugin/webapp"
+    }
   }
 }

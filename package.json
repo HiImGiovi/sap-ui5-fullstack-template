@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "create-bindings": "cds bind -2 templateproject-db & cds bind -2 templateproject-auth",
+    "create-bindings": "cds bind -2 templateproject-db && cds bind -2 templateproject-auth",
     "watch": "cds w --profile hybrid",
     "start-flp": "cds bind --exec -- npm start --prefix app/router",
     "start-fs": "npm run watch & npm run start-flp"
